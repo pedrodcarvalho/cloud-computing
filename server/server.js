@@ -12,6 +12,7 @@ const auth = require('./src/routes/auth');
 
 const app = express();
 const HTTP_PORT = 5000 || process.env.PORT;
+const DATABASE_IP = 'localhost' || process.env.DATABASE_IP;
 
 app.use(cors());
 
@@ -20,22 +21,26 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Replace <localhost:27017> with the actual IP address of your MongoDB VM
-const mongoUri = 'mongodb://localhost:27017/greetmate';
-mongoose.connect(mongoUri, {
+const mongoUri = `mongodb://${DATABASE_IP}:27017/greetmate`;
+mongoose
+  .connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(() => {
+  })
+  .then(() => {
     console.log('Connected to MongoDB');
-}).catch(err => {
+  })
+  .catch((err) => {
     console.error('MongoDB connection error:', err);
-});
+  });
 
-app.use(session({
+app.use(
+  session({
     secret: `${process.env.SESSION_SECRET}`,
     resave: false,
-    saveUninitialized: false
-}));
+    saveUninitialized: false,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -44,5 +49,5 @@ app.use('/', routes);
 app.use('/auth', auth);
 
 app.listen(HTTP_PORT, () => {
-    console.log(`HTTP server listening on port ${HTTP_PORT}`);
+  console.log(`HTTP server listening on port ${HTTP_PORT}`);
 });

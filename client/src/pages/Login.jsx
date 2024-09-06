@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button, Label, TextInput, Checkbox } from 'flowbite-react';
 
-import axios from 'axios';
+const BACKEND_IP = 'localhost' || process.env.REACT_APP_BACKEND_IP;
 
-// Define the Zod schema for validation
 const authSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
@@ -30,17 +30,20 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       setFormError('');
-      const url = isRegister ? 'http://localhost:5000/auth/register' : 'http://localhost:5000/auth/login';
+
+      const url = isRegister ? `http://${BACKEND_IP}:5000/auth/register` : `http://${BACKEND_IP}:5000/auth/login`;
       const response = await axios.post(url, data);
       localStorage.setItem('token', response.data.token);
-      console.log(response.data);
+
       if (isRegister) {
         setIsRegister(false);
         return;
       }
+
       navigate('/dashboard');
     } catch (error) {
       setFormError(error.response?.data?.message || 'Authentication failed');
+
       console.error(error.response?.data || 'Authentication failed');
     }
   };

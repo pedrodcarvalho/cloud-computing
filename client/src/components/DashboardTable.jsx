@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TextInput, Button } from 'flowbite-react';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { nanoid } from 'nanoid';
+import { Table, TextInput, Button } from 'flowbite-react';
+
+const BACKEND_IP = 'localhost' || process.env.BACKEND_IP;
 
 const authSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -19,7 +21,7 @@ const DashboardTable = () => {
 
   useEffect(() => {
     const fetchGreetings = async () => {
-      const response = await axios.get('http://localhost:5000/get-greetings', {
+      const response = await axios.get(`http://${BACKEND_IP}:5000/get-greetings`, {
         headers: {
           Authorization: localStorage.getItem('token'),
         },
@@ -48,20 +50,22 @@ const DashboardTable = () => {
   };
 
   const handleSaveClick = async () => {
-    await axios.put('http://localhost:5000/update-greeting', greetings[editIndex], {
+    await axios.put(`http://${BACKEND_IP}:5000/update-greeting`, greetings[editIndex], {
       headers: {
         Authorization: localStorage.getItem('token'),
       },
     });
+
     setEditIndex(null);
   };
 
   const handleDeleteClick = async () => {
-    await axios.post('http://localhost:5000/delete-greeting', greetings[editIndex], {
+    await axios.post(`http://${BACKEND_IP}:5000/delete-greeting`, greetings[editIndex], {
       headers: {
         Authorization: localStorage.getItem('token'),
       },
     });
+
     setGreetings(greetings.filter((_, index) => index !== editIndex));
     setEditIndex(null);
   };
@@ -76,12 +80,15 @@ const DashboardTable = () => {
     const newGreeting = getValues();
     newGreeting.date = new Date(newGreeting.date).toLocaleDateString('pt-BR');
     newGreeting.id = nanoid();
-    await axios.post('http://localhost:5000/set-greeting', newGreeting, {
+
+    await axios.post(`http://${BACKEND_IP}:5000/set-greeting`, newGreeting, {
       headers: {
         Authorization: localStorage.getItem('token'),
       },
     });
+
     setGreetings([...greetings, newGreeting]);
+
     reset({
       name: '',
       email: '',
@@ -158,7 +165,7 @@ const DashboardTable = () => {
               </Table.Cell>
               <Table.Cell>
                 {editIndex === index ? (
-                  <>
+                  <div className="flex">
                     <button
                       onClick={handleSaveClick}
                       className="font-medium bg-transparent text-cyan-700 hover:underline"
@@ -171,7 +178,7 @@ const DashboardTable = () => {
                     >
                       Delete
                     </button>
-                  </>
+                  </div>
                 ) : (
                   <button
                     onClick={handleEditClick.bind(null, index)}
@@ -183,7 +190,6 @@ const DashboardTable = () => {
               </Table.Cell>
             </Table.Row>
           ))}
-          {/* New greeting input row */}
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell>
               <TextInput
