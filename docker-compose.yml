@@ -3,7 +3,8 @@ version: '3.8'
 services:
   frontend:
     container_name: frontend
-    image: ./client
+    build:
+      context: ./client
     ports:
       - "3000:3000"  # Exponha a porta 3000 do container na porta 3000 do host
     networks:
@@ -18,7 +19,8 @@ services:
 
   backend:
     container_name: backend
-    image: ./server
+    build:
+      context: ./server
     ports:
       - "5000:5000"  # Exponha a porta 5000 do container
     networks:
