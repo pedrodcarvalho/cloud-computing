@@ -4,15 +4,14 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { nanoid } from 'nanoid';
-import { Table, TextInput, Button } from 'flowbite-react';
+import { Table, TextInput, Button, Datepicker } from 'flowbite-react';
 
-const BACKEND_IP = 'localhost' || process.env.BACKEND_IP;
+const BACKEND_IP = process.env.BACKEND_IP || 'localhost';
 
 const authSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   email: z.string().email('Invalid email address'),
   greeting: z.string().min(3, 'Greeting must be at least 3 characters long'),
-  date: z.string().min(3, 'Date must be at least 3 characters long'),
 });
 
 const DashboardTable = () => {
@@ -41,6 +40,7 @@ const DashboardTable = () => {
     formState: { errors },
     reset,
     getValues,
+    setValue,
   } = useForm({
     resolver: zodResolver(authSchema),
   });
@@ -77,8 +77,9 @@ const DashboardTable = () => {
   };
 
   const handleAddNewGreeting = async () => {
+    setValue('date', new Date(document.getElementById('date').value).toISOString());
+
     const newGreeting = getValues();
-    newGreeting.date = new Date(newGreeting.date).toLocaleDateString('pt-BR');
     newGreeting.id = nanoid();
 
     await axios.post(`http://${BACKEND_IP}:5000/set-greeting`, newGreeting, {
@@ -87,6 +88,7 @@ const DashboardTable = () => {
       },
     });
 
+    newGreeting.date = new Date(newGreeting.date).toLocaleDateString('pt-BR');
     setGreetings([...greetings, newGreeting]);
 
     reset({
@@ -98,7 +100,7 @@ const DashboardTable = () => {
   };
 
   return (
-    <div className="overflow-x-auto border-b-2 rounded-b-xl">
+    <div className="border-b-2 rounded-b-xl">
       <Table hoverable>
         <Table.Head>
           <Table.HeadCell className="bg-zinc-100">Name</Table.HeadCell>
@@ -222,11 +224,10 @@ const DashboardTable = () => {
               />
             </Table.Cell>
             <Table.Cell>
-              <TextInput
-                type="text"
-                placeholder="Date"
-                {...register('date')}
-                className="w-full bg-transparent focus:outline-none"
+              <Datepicker
+                id="date"
+                minDate={new Date()}
+                weekStart={1}
                 color={errors.date ? 'failure' : 'default'}
                 helperText={errors.date && <span className="text-red-600">{errors.date.message}</span>}
               />

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button, Label, TextInput, Checkbox } from 'flowbite-react';
 
-const BACKEND_IP = 'localhost' || process.env.REACT_APP_BACKEND_IP;
+const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || 'localhost';
 
 const authSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -33,6 +33,7 @@ const Login = () => {
 
       const url = isRegister ? `http://${BACKEND_IP}:5000/auth/register` : `http://${BACKEND_IP}:5000/auth/login`;
       const response = await axios.post(url, data);
+      localStorage.removeItem('token');
       localStorage.setItem('token', response.data.token);
 
       if (isRegister) {

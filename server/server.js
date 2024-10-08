@@ -12,7 +12,7 @@ const auth = require('./src/routes/auth');
 
 const app = express();
 const HTTP_PORT = 5000 || process.env.PORT;
-const DATABASE_IP = 'localhost' || process.env.DATABASE_IP;
+const DATABASE_IP = process.env.DATABASE_IP || 'localhost';
 
 app.use(cors());
 

@@ -5,7 +5,7 @@ import { Navbar, Avatar } from 'flowbite-react';
 
 import Logo from '../assets/logo.png';
 
-const BACKEND_IP = 'localhost' || process.env.REACT_APP_BACKEND_IP;
+const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || 'localhost';
 
 const NavBar = () => {
   const [username, setUsername] = useState('');
@@ -59,7 +59,12 @@ const NavBar = () => {
           className="underline"
         >
           <div className="space-y-1 font-medium dark:text-white">
-            <div>{username}</div>
+            <Link
+              to="/settings"
+              className="hover:underline flex items-center"
+            >
+              {username}
+            </Link>
           </div>
         </Avatar>
       </Navbar.Collapse>

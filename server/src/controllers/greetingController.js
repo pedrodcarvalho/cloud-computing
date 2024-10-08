@@ -2,7 +2,7 @@ const Greeting = require('../models/greeting');
 
 const getGreetings = async (req, res) => {
   try {
-    const greetings = (await Greeting.find()).filter((greeting) => greeting.username === req.user.data.username);
+    const greetings = (await Greeting.find()).filter((greeting) => greeting.id === req.user.data._id);
     res.status(200).json({ greetings });
   } catch (error) {
     console.error(error);
@@ -12,9 +12,9 @@ const getGreetings = async (req, res) => {
 
 const setGreeting = async (req, res) => {
   try {
-    const { name, email, greeting, date, id } = req.body;
-    const username = req.user.data.username;
-    const newGreeting = new Greeting({ name, email, greeting, date, id, username });
+    const { name, email, greeting, date } = req.body;
+    const id = req.user.data._id;
+    const newGreeting = new Greeting({ name, email, greeting, date, id });
     await newGreeting.save();
     res.status(200).json({ message: 'Greeting added successfully' });
   } catch (error) {
@@ -25,7 +25,7 @@ const setGreeting = async (req, res) => {
 
 const updateGreeting = async (req, res) => {
   try {
-    const { id, name, email, greeting, date } = req.body;
+    const { name, email, greeting, date, id } = req.body;
     await Greeting.findOneAndUpdate({ id: id }, { name, email, greeting, date });
     res.status(200).json({ message: 'Greeting updated successfully' });
   } catch (error) {
