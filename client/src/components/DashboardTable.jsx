@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { nanoid } from 'nanoid';
 import { Table, TextInput, Button, Datepicker } from 'flowbite-react';
 
-const BACKEND_IP = process.env.BACKEND_IP || 'localhost';
+const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || 'localhost';
 
 const authSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),

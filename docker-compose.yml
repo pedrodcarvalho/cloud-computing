@@ -6,7 +6,7 @@ services:
     build:
       context: ./client
     ports:
-      - "3000:3000"  # Exponha a porta 3000 do container na porta 3000 do host
+      - "3000:80"  # Exponha a porta 3000 do container na porta 3000 do host
     networks:
       - frontend-backend-net
     deploy:
