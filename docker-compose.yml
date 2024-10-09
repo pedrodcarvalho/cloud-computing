@@ -54,6 +54,7 @@ networks:
     driver: bridge  # Rede para comunicação entre frontend e backend
   backend-db-net:
     driver: bridge  # Rede para comunicação entre backend e DB
+    internal: true  # Rede interna sem acesso a internet
 
 volumes:
   db_data:
