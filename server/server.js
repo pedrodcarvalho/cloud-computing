@@ -14,7 +14,10 @@ const app = express();
 const HTTP_PORT = 5000 || process.env.PORT;
 const DATABASE_IP = process.env.DATABASE_IP || 'localhost';
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://172.16.176.132:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 app.use(express.static(path.join(__dirname, '/public')));
 
