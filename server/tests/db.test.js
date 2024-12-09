@@ -5,7 +5,8 @@ describe('Database Tests', () => {
   let db;
 
   beforeAll(async () => {
-    client = await MongoClient.connect(`mongodb://${process.env.DATABASE_IP}:27017`, {
+    const uri = process.env.MONGO_URI || 'mongodb://db:27017/testdb';
+    client = await MongoClient.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
