@@ -9,15 +9,18 @@ const passport = require('passport');
 
 const routes = require('./src/routes/routes');
 const auth = require('./src/routes/auth');
+const test = require('./src/routes/tests');
 
 const app = express();
-const HTTP_PORT = 5000 || process.env.PORT;
-const DATABASE_IP = process.env.DATABASE_IP || 'localhost';
+const HTTP_PORT = process.env.PORT || '5000';
+const DATABASE_IP = process.env.DATABASE_IP || '127.0.0.1';
 
-app.use(cors({
-  origin: 'http://172.16.176.132:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  })
+);
 
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -26,10 +29,7 @@ app.use(bodyParser.json());
 
 const mongoUri = `mongodb://${DATABASE_IP}:27017/greetmate`;
 mongoose
-  .connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(mongoUri)
   .then(() => {
     console.log('Connected to MongoDB');
   })
@@ -50,6 +50,7 @@ app.use(passport.session());
 
 app.use('/', routes);
 app.use('/auth', auth);
+app.use('/api', test);
 
 app.listen(HTTP_PORT, () => {
   console.log(`HTTP server listening on port ${HTTP_PORT}`);

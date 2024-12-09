@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button, Label, TextInput } from 'flowbite-react';
 
-const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || 'localhost';
+const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || '127.0.0.1';
 
 const authSchema = z.object({
   username: z.string().email('Invalid email address'),

@@ -6,14 +6,14 @@ services:
     build:
       context: ./client
     ports:
-      - "3000:80"  # Exponha a porta 3000 do container na porta 3000 do host
+      - '3000:80'
     networks:
       - frontend-backend-net
     deploy:
       resources:
         limits:
-          cpus: "2"  # Alocação de 2 núcleos
-          memory: 2G  # Alocação de 2GB de RAM
+          cpus: '2'
+          memory: 2G
     depends_on:
       - backend
 
@@ -22,14 +22,14 @@ services:
     build:
       context: ./server
     ports:
-      - "5000:5000"  # Exponha a porta 5000 do container
+      - '5000:5000'
     networks:
       - frontend-backend-net
       - backend-db-net
     deploy:
       resources:
         limits:
-          cpus: "2"
+          cpus: '2'
           memory: 2G
     depends_on:
       - db
@@ -38,24 +38,24 @@ services:
     container_name: db
     image: mongo
     ports:
-      - "27017:27017"  # Exponha a porta padrão do MongoDB
+      - '27017:27017'
     networks:
       - backend-db-net
     deploy:
       resources:
         limits:
-          cpus: "2"
+          cpus: '2'
           memory: 2G
     volumes:
       - db_data:/data/db
 
 networks:
   frontend-backend-net:
-    driver: bridge  # Rede para comunicação entre frontend e backend
+    driver: bridge
   backend-db-net:
-    driver: bridge  # Rede para comunicação entre backend e DB
-    internal: true  # Rede interna sem acesso a internet
+    driver: bridge
+    internal: true
 
 volumes:
   db_data:
-    driver: local  # Volume para persistência dos dados do MongoDB
+    driver: local

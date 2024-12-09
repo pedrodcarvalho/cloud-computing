@@ -5,7 +5,7 @@ import { Navbar, Avatar } from 'flowbite-react';
 
 import Logo from '../assets/logo.png';
 
-const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || 'localhost';
+const BACKEND_IP = process.env.REACT_APP_BACKEND_IP || '127.0.0.1';
 
 const NavBar = () => {
   const [username, setUsername] = useState('');

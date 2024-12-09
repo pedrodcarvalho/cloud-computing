@@ -6,7 +6,6 @@
     "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.4",
     "flowbite": "^2.5.1",
@@ -33,6 +32,11 @@
       "react-app/jest"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!axios)/"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -46,8 +50,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
     "@eslint/js": "^9.9.1",
+    "@testing-library/react": "^16.1.0",
     "autoprefixer": "^10.4.20",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.2",
     "globals": "^15.9.0",

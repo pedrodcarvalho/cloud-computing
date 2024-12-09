@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="echo 'db.runCommand({ ping: 1 })' | mongo localhost:27017/test --quiet"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker containers
+        run: |
+          docker-compose -f docker-compose.yml up --build -d
+
+      - name: Run backend tests
+        run: |
+          docker exec backend npm install
+          docker exec backend npm test
+        env:
+          MONGO_URI: mongodb://db:27017/testdb
+
+      - name: Run frontend tests
+        run: |
+          docker exec frontend npm install
+          docker exec frontend npm test
+
+      - name: Run integration tests
+        run: |
+          docker exec backend curl -X POST http://backend:5000/api/test
+
+      - name: Tear down
+        if: always()
+        run: docker-compose down
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to production
+        run: |
+          docker-compose -f docker-compose.prod.yml up -d
