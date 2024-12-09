@@ -5,6 +5,7 @@ services:
     container_name: frontend
     build:
       context: ./client
+      dockerfile: Dockerfile
     ports:
       - '3000:80'
     networks:
@@ -16,6 +17,8 @@ services:
           memory: 2G
     depends_on:
       - backend
+    environment:
+      - NODE_ENV=development
 
   backend:
     container_name: backend
