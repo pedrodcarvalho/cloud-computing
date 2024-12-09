@@ -28,8 +28,8 @@ jobs:
 
       - name: Run backend tests
         run: |
-          docker-compose run --rm frontend npm install
-          docker-compose run --rm frontend npm test
+          docker compose run --rm frontend npm install
+          docker compose run --rm frontend npm test
         env:
           DATABASE_IP: db
           MONGO_URI: mongodb://db:27017/testdb
