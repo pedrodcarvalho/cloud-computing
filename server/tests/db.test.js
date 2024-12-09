@@ -10,7 +10,7 @@ describe('Database Tests', () => {
       useUnifiedTopology: true,
     });
     db = client.db('testdb');
-  });
+  }, 30000);
 
   afterAll(async () => {
     await client.close();
