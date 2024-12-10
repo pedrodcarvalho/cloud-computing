@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: pedrodcarvalho/cloud-computing:frontend
+    container_name: frontend
+    ports:
+      - '3000:80'
+    networks:
+      - frontend-backend-net
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+    environment:
+      - NODE_ENV=production
+
+  backend:
+    image: pedrodcarvalho/cloud-computing:backend
+    container_name: backend
+    ports:
+      - '5000:5000'
+    networks:
+      - frontend-backend-net
+      - backend-db-net
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://db:27017/greetmate
+
+  db:
+    image: mongo:latest
+    container_name: db
+    ports:
+      - '27017:27017'
+    networks:
+      - backend-db-net
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    volumes:
+      - db_data:/data/db
+
+networks:
+  frontend-backend-net:
+    driver: bridge
+  backend-db-net:
+    driver: bridge
+    internal: true
+
+volumes:
+  db_data:
+    driver: local
