@@ -1,9 +1,6 @@
-version: '3.8'
-
 services:
   frontend:
     image: pedrodcarvalho/cloud-computing:frontend
-    container_name: frontend
     ports:
       - '3000:80'
     networks:
@@ -20,7 +17,6 @@ services:
 
   backend:
     image: pedrodcarvalho/cloud-computing:backend
-    container_name: backend
     ports:
       - '5000:5000'
     networks:
@@ -39,7 +35,6 @@ services:
 
   db:
     image: mongo:latest
-    container_name: db
     ports:
       - '27017:27017'
     networks:
