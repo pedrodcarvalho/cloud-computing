@@ -37,7 +37,7 @@ jobs:
       - name: Run frontend tests
         run: |
           docker run --rm -v $(pwd)/client:/app -w /app node:latest npm install
-          docker run --rm -v $(pwd)/client:/app -w /app node:latest npm test
+          docker run --rm -v $(pwd)/client:/app -w /app node:latest npm test -- --watchAll=false
 
       - name: Run integration tests
         run: |
